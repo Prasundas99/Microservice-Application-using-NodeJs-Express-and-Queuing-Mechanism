@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import CommentCreate from "./CommentCreate";
 function PostList() {
   const [posts, setPosts] = useState({});
 
@@ -13,7 +14,8 @@ function PostList() {
     fetchPost();
   }, []);
 
-  const redderedPosts = Object.values(posts).map((post) => {  //Object.values() converts object to array
+  const redderedPosts = Object.values(posts).map((post) => {
+    //Object.values() converts object to array
     return (
       <div
         className="card"
@@ -22,17 +24,18 @@ function PostList() {
       >
         <div className="card-body">
           <h3>{post.title}</h3>
+          <CommentCreate postId={post.id} />
         </div>
       </div>
     );
   });
 
   return (
-<>
-<h1>Posts</h1>
-<div className="d-flex flex-row flex-wrap justify-content-between">
-      {redderedPosts}
-    </div>
+    <>
+      <h1>Posts</h1>
+      <div className="d-flex flex-row flex-wrap justify-content-between">
+        {redderedPosts}
+      </div>
     </>
   );
 }
