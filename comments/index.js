@@ -19,7 +19,7 @@ app.use(cors());
 const commentsByPostId = {};
 
 /**
- * 
+ * @description: Get all comments of each post by post id in array
  */
 app.get("/posts/:id/comments", (req, res) => {
   res.send(commentsByPostId[req.params.id] || []);
@@ -27,7 +27,7 @@ app.get("/posts/:id/comments", (req, res) => {
 
 
 /**
- * 
+ * @description: To post comment
  */
 app.post("/posts/:id/comments", async (req, res) => {
   const commentId = randomBytes(4).toString("hex");
@@ -37,7 +37,10 @@ app.post("/posts/:id/comments", async (req, res) => {
   comments.push({ id: commentId, content });
   commentsByPostId[req.params.id] = comments;
 
- //TODO: why to post
+  /**
+   * @description: Comment is sent to event queue which will be called by query service so that the user gets all content with less api calls 
+   * also decreasing depedency of this service if this service goes down the user can stil able to view comments
+   */
   await axios.post(`http://localhost:4005/events`, {
     type: "CommentCreated",
     data: {
@@ -51,7 +54,7 @@ app.post("/posts/:id/comments", async (req, res) => {
 
 
 /**
- * 
+ * @description: to get request from event to check wether the service is still alive and to fetch data from other service via async microservice rule
  */
 app.post("/events", (req, res) => {
   console.log("Recived event of:", req.body.type); //To get type of event
