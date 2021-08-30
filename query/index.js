@@ -7,16 +7,34 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 
-//To optimised api calls one single request which will give all comments and post in one call rather than calling it many times
-//This is only for reading data the post and comment service are 100% incharge of creating posts
+/**
+ * @description: To optimised api calls one single request which will give all comments and post in one call rather than calling it many times
+ * This is only for reading data the post and comment service are 100% incharge of creating posts
+ */
 
 
+//Dummy data instead of db
 const posts = {};
+
+/**
+ * @description: Gives all the data to user
+ * @returns object: 
+ * {
+     id: '9eb1e0b8',
+     title: 'test3',
+    comments: [
+      { id: '82de0f69', content: 'hu' },
+      { id: '7285d8ef', content: 'huhu' }
+    ]
+}
+*/
 app.get("/posts", (req, res) => {
   res.send(posts);
 });
 
-
+/**
+ * @description: Gets the data from all other service and interprets them to get an optimised call from api
+ */
 app.post("/events", async (req, res) => {
   const { type, data } = req.body;
   if (type == "PostCreated") {
@@ -34,5 +52,5 @@ app.post("/events", async (req, res) => {
 
 
 app.listen(4002, () => {
-  console.log("Listening on 4002");
+  console.log("Query service is Listening on 4002");
 });

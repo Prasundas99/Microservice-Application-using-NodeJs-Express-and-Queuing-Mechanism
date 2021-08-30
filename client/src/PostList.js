@@ -14,6 +14,8 @@ function PostList() {
     fetchPost();
   }, []);
   console.log(posts);
+
+  
   const redderedPosts = Object.values(posts).map((post) => {
     //Object.values() converts object to array
     return (

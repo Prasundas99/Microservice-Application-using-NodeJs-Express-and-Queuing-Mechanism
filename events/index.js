@@ -6,6 +6,10 @@ const app = express()
 app.use(express.urlencoded({extended: true})); 
 app.use(express.json());
 
+/**
+ * @description: This service works as event bus as theory given by async microservices
+ * It takes request from all the services generates an event and returns to the service which requires the event
+ */
 
 app.post('/events', (req, res)=> {
     const event = req.body;
@@ -18,5 +22,5 @@ app.post('/events', (req, res)=> {
 })
 
 app.listen(4005, ()=> {
-    console.log('Listening on 4005');
+    console.log('Event bus Listening on 4005');
 })
