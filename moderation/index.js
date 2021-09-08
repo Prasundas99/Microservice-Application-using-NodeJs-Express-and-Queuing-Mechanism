@@ -13,8 +13,23 @@ app.use(express.json());
  * from query the use can see weather their post was accepted or rejected till then moderation is going on will be shown to user
  */
 
-app.post('/events', (req,res) => {
+app.post('/events',async(req,res) => {
+const {type , data} = req.body;
 
+if(type == 'CommentCreated'){
+    const status = data.content.includes('orange')? 'rejected' : 'approved';
+ 
+    await axios.post('http://localhost:4005/events',{
+        type: 'CommentModerated',
+        data:{
+            id: data.id,
+            postID: data.postID,
+            status,
+            content: data.content
+        }
+    })
+}
+ 
 } )
 
 app.listen(4003, () => {
