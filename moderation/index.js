@@ -15,7 +15,6 @@ app.use(express.json());
 
 app.post('/events',async(req,res) => {
 const {type , data} = req.body;
-
 if(type == 'CommentCreated'){
     const status = data.content.includes('orange')? 'rejected' : 'approved';
  
@@ -23,7 +22,7 @@ if(type == 'CommentCreated'){
         type: 'CommentModerated',
         data:{
             id: data.id,
-            postID: data.postID,
+            postId: data.postId,
             status,
             content: data.content
         }
