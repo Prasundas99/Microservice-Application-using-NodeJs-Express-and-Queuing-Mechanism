@@ -29,26 +29,29 @@ app.get("/posts/:id/comments", (req, res) => {
  * @description: To post comment
  */
 app.post("/posts/:id/comments", async (req, res) => {
-  const commentId = randomBytes(4).toString("hex");
+  const commentId = randomBytes(4).toString('hex');
   const { content } = req.body;
 
   const comments = commentsByPostId[req.params.id] || [];
-  comments.push({ id: commentId, content, status: "pending" });
+
+  comments.push({ id: commentId, content, status: 'pending' });
+
   commentsByPostId[req.params.id] = comments;
 
   /**
    * @description: Comment is sent to event queue which will be called by query service so that the user gets all content with less api calls
    * also decreasing depedency of this service if this service goes down the user can stil able to view comments
    */
-  await axios.post(`http://localhost:4005/events`, {
-    type: "CommentCreated",
+   await axios.post('http://localhost:4005/events', {
+    type: 'CommentCreated',
     data: {
       id: commentId,
       content,
       postId: req.params.id,
-      status: "pending",
-    },
+      status: 'pending'
+    }
   });
+
   res.status(201).send(comments);
 });
 
@@ -59,24 +62,23 @@ app.post("/events", async(req, res) => {
   console.log("Recived event of:", req.body.type); //To get type of event
 
   const { type, data } = req.body;
-  if (type === "CommentModerated") {
+  if (type === 'CommentModerated') {
     const { postId, id, status, content } = data;
-    
     const comments = commentsByPostId[postId];
 
-    const comment = comments.find((comment) => {
+    const comment = comments.find(comment => {
       return comment.id === id;
     });
     comment.status = status;
 
-    await axios.post("http://localhost:4005/events", {
-      type: "CommentUpdated",
+    await axios.post('http://localhost:4005/events', {
+      type: 'CommentUpdated',
       data: {
         id,
         status,
         postId,
-        content,
-      },
+        content
+      }
     });
   }
 
