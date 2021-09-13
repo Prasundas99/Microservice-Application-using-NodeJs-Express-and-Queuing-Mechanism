@@ -66,7 +66,7 @@ app.get("/posts", (req, res) => {
  */
 app.post("/events", async (req, res) => {
   const { type, data } = req.body;
-  handelEvent(type, data)
+  handleEvent(type, data)
   res.send({});
 });
 
