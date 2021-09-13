@@ -21,13 +21,13 @@ const posts = {};
 const handleEvent = (type, data) => {
   if (type === 'PostCreated') {
     const { id, title } = data;
-
     posts[id] = { id, title, comments: [] };
   }
 
   if (type === 'CommentCreated') {
+    console.log(data);
     const { id, content, postId, status } = data;
-
+console.log(posts[postId]);
     const post = posts[postId];
     post.comments.push({ id, content, status });
   }
@@ -66,7 +66,7 @@ app.get("/posts", (req, res) => {
  */
 app.post("/events", async (req, res) => {
   const { type, data } = req.body;
-  handelEvent(type, data)
+  handleEvent(type, data)
   res.send({});
 });
 
@@ -78,7 +78,6 @@ app.listen(4002, async () => {
 
   for (let event of res.data) {
     console.log('Processing event:', event.type);
-
     handleEvent(event.type, event.data);
   }
 });

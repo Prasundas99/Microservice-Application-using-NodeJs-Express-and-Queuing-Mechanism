@@ -15,10 +15,11 @@ app.use(express.json());
 
  app.post('/events', async (req, res) => {
     const { type, data } = req.body;
-  
+  setTimeout( async function(){
     if (type === 'CommentCreated') {
       const status = data.content.includes('orange') ? 'rejected' : 'approved';
   
+
       await axios.post('http://localhost:4005/events', {
         type: 'CommentModerated',
         data: {
@@ -29,8 +30,9 @@ app.use(express.json());
         }
       });
     }
-  
-    res.send({});
+  }, 8000);
+    setTimeout(function(){ res.send({}); }, 4000);   //comment is moderated for 3sec so that it simulates real moderation
+    
   });
 
 app.listen(4003, () => {

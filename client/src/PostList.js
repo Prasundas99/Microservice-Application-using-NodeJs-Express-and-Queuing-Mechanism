@@ -4,6 +4,8 @@ import CommentCreate from "./CommentCreate";
 import CommentList from "./CommentList";
 function PostList() {
   const [posts, setPosts] = useState({});
+const [pending, isPending] = useState(-1)
+
 
   const fetchPost = async () => {
     const res = await axios.get("http://localhost:4002/posts");
@@ -11,12 +13,19 @@ function PostList() {
   };
 
   useEffect(() => {
-    fetchPost();
-  }, []);
-  console.log(posts);
+      fetchPost();
+      console.log("Rendered");
+  }, [pending]);
+
 
   
   const redderedPosts = Object.values(posts).map((post) => {
+     post && post.comments.map((comment) =>{
+            if (comment.status === "pending") {
+              setTimeout(function(){ isPending(pending+1); console.log(pending); }, 4000); //rerender the page hence calling the api if the comment made is still pending
+      }
+      })
+     
     //Object.values() converts object to array
     return (
       <div
